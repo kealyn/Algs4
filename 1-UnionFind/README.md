@@ -55,6 +55,7 @@ Assuming T is sufficiently large (say, at least 30), the following provides a 95
 
 To perform a series of computational experiments, create a data type PercolationStats with the following API.
 
+```
 public class PercolationStats {
    public PercolationStats(int N, int T)   // perform T independent experiments on an N-by-N grid
    public double mean()                    // sample mean of percolation threshold
@@ -62,6 +63,8 @@ public class PercolationStats {
    public double confidenceLow()           // low  endpoint of 95% confidence interval
    public double confidenceHigh()          // high endpoint of 95% confidence interval
 }
+```
+
 The constructor should throw a java.lang.IllegalArgumentException if either N ≤ 0 or T ≤ 0.
 The constructor should take two arguments N and T, and perform T independent computational experiments (discussed above) on an N-by-N grid. Using this experimental data, it should calculate the mean, standard deviation, and the 95% confidence interval for the percolation threshold. Use standard random from stdlib.jar to generate random numbers; use standard statistics from stdlib.jar to compute the sample mean and standard deviation.
 
