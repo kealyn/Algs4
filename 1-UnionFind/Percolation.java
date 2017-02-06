@@ -165,7 +165,7 @@ public class Percolation
    public static void main(String[] args) throws FileNotFoundException,IOException    // test client (optional)
    {       
        // Test cases
-       Scanner scanner = new Scanner(new File("input6.txt"));
+       Scanner scanner = new Scanner(new File("1-UnionFind/input6.txt"));
        int n = scanner.nextInt();
        Percolation p = new Percolation(n);  
        while(scanner.hasNextInt()){
