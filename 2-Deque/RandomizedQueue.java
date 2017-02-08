@@ -9,13 +9,11 @@ import java.util.Iterator;
 public class RandomizedQueue<Item> implements Iterable<Item>
 {
 	private QNode head;
-	private RndQueueIterator iterator;
 	private int N = 0;
 	
 	// construct an empty randomized queue
 	public RandomizedQueue()
 	{
-		iterator = new RndQueueIterator();
 	}
 	
 	// is the queue empty?
@@ -54,7 +52,17 @@ public class RandomizedQueue<Item> implements Iterable<Item>
 	{
 		if (size() == 0)
 			throw new java.util.NoSuchElementException();
-		return this.iterator.next();
+		int r = StdRandom.uniform(N);
+		QNode node = head;
+		QNode prevNode = head;
+		for (int i = 0; i < r; i++)
+		{
+			node = node.next;
+			prevNode = node;
+		}
+		prevNode.next = node.next;
+		N--;
+		return (Item)node.item;
 	}
 	
 	// return (but do not remove) a random item
@@ -75,7 +83,7 @@ public class RandomizedQueue<Item> implements Iterable<Item>
 	// return an independent iterator over items in random order
 	public Iterator<Item> iterator()
 	{
-		return this.iterator;		
+		return new RndQueueIterator();	
 	}
 	
 	// Inner class for QNode
@@ -94,6 +102,7 @@ public class RandomizedQueue<Item> implements Iterable<Item>
 	// DequeIterator class
     private class RndQueueIterator implements Iterator<Item>
     {
+    	
         public boolean hasNext() { return size() > 0; }
         public void remove()
         {
@@ -104,7 +113,6 @@ public class RandomizedQueue<Item> implements Iterable<Item>
             if (size() == 0)            
             	// No more elements to return
             	throw new java.util.NoSuchElementException();
-            
             int r = StdRandom.uniform(N);
     		QNode node = head;
     		QNode prevNode = head;
@@ -113,9 +121,8 @@ public class RandomizedQueue<Item> implements Iterable<Item>
     			node = node.next;
     			prevNode = node;
     		}
-    		prevNode.next = node.next;
-    		N--;
     		return (Item)node.item;
+            
         }
     }
 	

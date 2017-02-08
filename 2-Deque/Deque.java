@@ -118,7 +118,7 @@ public class Deque<Item> implements Iterable<Item>
     private class DequeIterator implements Iterator<Item>
     {
     	private int idx = head;
-        public boolean hasNext() { return idx == tail; }
+        public boolean hasNext() { return idx != tail; }
         public void remove()
         {
             throw new java.lang.UnsupportedOperationException();
@@ -142,12 +142,22 @@ public class Deque<Item> implements Iterable<Item>
     	deque.addFirst(1);
         deque.addLast(2);
     	
-        while (deque.iterator().hasNext())
+        Iterator it1 = deque.iterator();
+        
+        
+        deque.addLast(3);
+        Iterator it2 = deque.iterator();
+        while (it1.hasNext())
     	{
-    		System.out.println(deque.iterator().next());    	
+    		System.out.println(it1.next());    	
     	}
         
-    	System.out.println(deque.size()); // 5
+        
+        
+        
+        
+        
+    	System.out.println("Size: " + deque.size()); // 5
     	
     	
     	/*deque.addLast(10);
