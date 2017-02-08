@@ -5,13 +5,12 @@ import java.util.Scanner;
 import java.io.*; 
 import java.util.Iterator;
 
-public class Deque<Item> //implements Iterable<Item> 
+public class Deque<Item> implements Iterable<Item> 
 {	
 	private Item[] deque;
 	private int tail;
 	private int head;
 	private int N = 10;
-	private DequeIterator iterator;
 	
 	// construct an empty deque
 	public Deque()
@@ -19,7 +18,6 @@ public class Deque<Item> //implements Iterable<Item>
 		deque = (Item[]) new Object[N];
 		tail = N / 2;
 		head = tail;
-		iterator = new DequeIterator();
 	}
 	
 	// is the deque empty?
@@ -34,8 +32,9 @@ public class Deque<Item> //implements Iterable<Item>
 		return tail - head;
 	}
 	
-	// add the item to the front
-	public void addFirst(Item item)          
+	
+	// add the item to the end
+	public void addLast(Item item)          
 	{
         if (item == null) throw new java.lang.NullPointerException();
         
@@ -59,8 +58,8 @@ public class Deque<Item> //implements Iterable<Item>
         deque[tail++] = item;
 	}
 	
-	// add the item to the end
-    public void addLast(Item item)           
+	// add the item to the front
+    public void addFirst(Item item)           
     {
         if (item == null) throw new java.lang.NullPointerException();
         
@@ -93,15 +92,17 @@ public class Deque<Item> //implements Iterable<Item>
     public Item removeFirst()                
     {
     	if (size() <= 0)    	
-    		throw new java.lang.IndexOutOfBoundsException();
-    	return iterator.next();
+    		throw new java.util.NoSuchElementException();
+    	Item result = deque[head++];
+    	deque[head - 1] = null;
+    	return result;
     }
     
     // remove and return the item from the end
     public Item removeLast()                 
     {
     	if (size() <= 0)
-    		throw new java.lang.IndexOutOfBoundsException();    	
+    		throw new java.util.NoSuchElementException();    	
     	Item result = deque[--tail];
     	return result;
     }
@@ -110,13 +111,14 @@ public class Deque<Item> //implements Iterable<Item>
     // return an iterator over items in order from front to end
     public Iterator<Item> iterator()         
     {
-        return this.iterator;
+        return new DequeIterator();
     }
     
     // DequeIterator class
-    class DequeIterator implements Iterator<Item>
+    private class DequeIterator implements Iterator<Item>
     {
-        public boolean hasNext() { return size() > 0; }
+    	private int idx = head;
+        public boolean hasNext() { return idx == tail; }
         public void remove()
         {
             throw new java.lang.UnsupportedOperationException();
@@ -127,9 +129,8 @@ public class Deque<Item> //implements Iterable<Item>
             	// No more elements to return
             	throw new java.util.NoSuchElementException();
             
-            // Remove from head
-            Item result = deque[head++];
-        	deque[head - 1] = null;
+            // Get from head
+            Item result = deque[idx++];
         	return result;
         }
     }
@@ -137,21 +138,19 @@ public class Deque<Item> //implements Iterable<Item>
     // Testings
     public static void main(String[] args)
     {
-		Deque deque = new Deque();
+    	Deque deque = new Deque();
     	deque.addFirst(1);
-    	deque.addFirst(2);
-    	deque.addFirst(2);
-    	deque.addFirst(2);
-    	deque.addFirst(2);
-    	deque.addFirst(2);
-    	deque.addFirst(2);
+        deque.addLast(2);
     	
-    	System.out.println(deque.removeFirst());
-    	System.out.println(deque.removeLast());
+        while (deque.iterator().hasNext())
+    	{
+    		System.out.println(deque.iterator().next());    	
+    	}
+        
     	System.out.println(deque.size()); // 5
     	
     	
-    	deque.addLast(10);
+    	/*deque.addLast(10);
     	deque.addLast(3);
     	deque.addLast(3);
     	deque.addLast(3);
@@ -168,10 +167,6 @@ public class Deque<Item> //implements Iterable<Item>
     	while (deque.iterator().hasNext())
     	{
     		System.out.println(deque.iterator().next());    	
-    	}
-    	
-    	
-    	
+    	}*/
     }
-
 }
