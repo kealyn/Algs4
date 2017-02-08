@@ -125,7 +125,7 @@ public class Deque<Item> implements Iterable<Item>
         }
         public Item next()
         {
-            if (size() == 0)            
+            if (!hasNext())            
             	// No more elements to return
             	throw new java.util.NoSuchElementException();
             

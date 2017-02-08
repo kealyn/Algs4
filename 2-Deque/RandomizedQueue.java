@@ -1,3 +1,4 @@
+import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdStats;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
@@ -53,16 +54,29 @@ public class RandomizedQueue<Item> implements Iterable<Item>
 		if (size() == 0)
 			throw new java.util.NoSuchElementException();
 		int r = StdRandom.uniform(N);
-		QNode node = head;
-		QNode prevNode = head;
-		for (int i = 0; i < r; i++)
+		
+		Item result = null;
+		if (r == 0)
 		{
-			node = node.next;
-			prevNode = node;
+			// Corner case, remove head
+			result = (Item) head.item;
+			head = head.next;			
 		}
-		prevNode.next = node.next;
+		else
+		{
+			QNode node = head;
+			QNode prevNode = head;
+			for (int i = 0; i < r; i++)
+			{
+				prevNode = node;
+				node = node.next;				
+			}
+			prevNode.next = node.next;
+			result = (Item) node.item;
+		}	
+		
 		N--;
-		return (Item)node.item;
+		return result;
 	}
 	
 	// return (but do not remove) a random item
@@ -101,8 +115,7 @@ public class RandomizedQueue<Item> implements Iterable<Item>
 	
 	// DequeIterator class
     private class RndQueueIterator implements Iterator<Item>
-    {
-    	
+    {    	
         public boolean hasNext() { return size() > 0; }
         public void remove()
         {
@@ -110,7 +123,7 @@ public class RandomizedQueue<Item> implements Iterable<Item>
         }
         public Item next()
         {
-            if (size() == 0)            
+            if (!hasNext())            
             	// No more elements to return
             	throw new java.util.NoSuchElementException();
             int r = StdRandom.uniform(N);
@@ -129,20 +142,25 @@ public class RandomizedQueue<Item> implements Iterable<Item>
 	// unit testing (optional)
 	public static void main(String[] args)
 	{
-		RandomizedQueue queue = new RandomizedQueue();
-		queue.enqueue(1);
-		queue.enqueue(2);
-		queue.enqueue(3);
-		queue.enqueue(4);
-		queue.enqueue(5);
-		queue.enqueue(6);
+		RandomizedQueue rq = new RandomizedQueue();
+		rq.enqueue(34);
+		System.out.println(rq.isEmpty());//     ==> false
+		System.out.println(rq.size());//        ==> 1
+        rq.enqueue(12);
+        System.out.println(rq.dequeue());//     ==> 34
+        rq.enqueue(14);
+        rq.enqueue(18);
+        System.out.println(rq.size());//        ==> 3
+        System.out.println(rq.dequeue());//     ==> 34
 		
-    	System.out.println("Size: " + queue.size()); // 6
-    	System.out.println(queue.sample());
-    	System.out.println("Size: " + queue.size()); // 6
-    	System.out.println(queue.dequeue());
-    	System.out.println(queue.iterator().next());
-    	System.out.println("Size: " + queue.size()); // 4
+        /*
+    	System.out.println("Size: " + rq.size()); // 6
+    	System.out.println(rq.sample());
+    	System.out.println("Size: " + rq.size()); // 6
+    	System.out.println(rq.dequeue());
+    	System.out.println(rq.iterator().next());
+    	System.out.println("Size: " + rq.size()); // 4
+    	*/
     	
 	}
 }
