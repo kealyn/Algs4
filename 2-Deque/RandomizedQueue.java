@@ -9,7 +9,7 @@ import java.util.Iterator;
 
 public class RandomizedQueue<Item> implements Iterable<Item>
 {
-	private QNode head;
+	private QNode<Item> head;
 	private int N = 0;
 	
 	// construct an empty randomized queue
@@ -32,7 +32,7 @@ public class RandomizedQueue<Item> implements Iterable<Item>
 	// add the item
 	public void enqueue(Item item)
 	{
-		QNode newNode = new QNode(item);
+		QNode<Item> newNode = new QNode<Item>(item);
 		if (N == 0)
 		{
 			// First node
@@ -41,7 +41,7 @@ public class RandomizedQueue<Item> implements Iterable<Item>
 		}
 		else
 		{
-			QNode it = head;
+			QNode<Item> it = head;
 			while (it.next != null) it = it.next;
 			it.next = newNode;
 			N++;
@@ -64,8 +64,8 @@ public class RandomizedQueue<Item> implements Iterable<Item>
 		}
 		else
 		{
-			QNode node = head;
-			QNode prevNode = head;
+			QNode<Item> node = head;
+			QNode<Item> prevNode = head;
 			for (int i = 0; i < r; i++)
 			{
 				prevNode = node;
@@ -86,7 +86,7 @@ public class RandomizedQueue<Item> implements Iterable<Item>
 			throw new java.util.NoSuchElementException();
 		
 		int r = StdRandom.uniform(N);
-		QNode node = head;
+		QNode<Item> node = head;
 		for (int i = 0; i < r; i++)
 		{
 			node = node.next;
@@ -97,14 +97,14 @@ public class RandomizedQueue<Item> implements Iterable<Item>
 	// return an independent iterator over items in random order
 	public Iterator<Item> iterator()
 	{
-		return new RndQueueIterator();	
+		return new RndQueueIterator<Item>(head);	
 	}
 	
 	// Inner class for QNode
 	private class QNode<Item>
 	{
 		Item item;
-		QNode next;
+		QNode<Item> next;
 		public QNode(Item item)
 		{
 			this.item = item;
@@ -114,9 +114,16 @@ public class RandomizedQueue<Item> implements Iterable<Item>
 	
 	
 	// DequeIterator class
-    private class RndQueueIterator implements Iterator<Item>
+    private class RndQueueIterator<Item> implements Iterator<Item>
     {    	
-        public boolean hasNext() { return size() > 0; }
+    	QNode<Item> current;
+    	
+    	public RndQueueIterator(QNode<Item> head)
+    	{
+    		current = head;
+    	}
+    	
+        public boolean hasNext() { return current != null; }
         public void remove()
         {
             throw new java.lang.UnsupportedOperationException();
@@ -127,12 +134,12 @@ public class RandomizedQueue<Item> implements Iterable<Item>
             	// No more elements to return
             	throw new java.util.NoSuchElementException();
             int r = StdRandom.uniform(N);
-    		QNode node = head;
-    		QNode prevNode = head;
+    		QNode<Item> node = current;
+    		QNode<Item> prevNode;
     		for (int i = 0; i < r; i++)
     		{
-    			node = node.next;
     			prevNode = node;
+    			node = node.next;    			
     		}
     		return (Item)node.item;
             
@@ -142,7 +149,8 @@ public class RandomizedQueue<Item> implements Iterable<Item>
 	// unit testing (optional)
 	public static void main(String[] args)
 	{
-		RandomizedQueue rq = new RandomizedQueue();
+		RandomizedQueue rq = new RandomizedQueue();		
+		
 		rq.enqueue(34);
 		System.out.println(rq.isEmpty());//     ==> false
 		System.out.println(rq.size());//        ==> 1
@@ -153,6 +161,12 @@ public class RandomizedQueue<Item> implements Iterable<Item>
         System.out.println(rq.size());//        ==> 3
         System.out.println(rq.dequeue());//     ==> 34
 		
+        Iterator it = rq.iterator();
+        System.out.println(it.next());
+        
+        
+        
+        
         /*
     	System.out.println("Size: " + rq.size()); // 6
     	System.out.println(rq.sample());
