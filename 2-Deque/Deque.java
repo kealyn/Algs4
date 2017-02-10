@@ -111,13 +111,18 @@ public class Deque<Item> implements Iterable<Item>
     // return an iterator over items in order from front to end
     public Iterator<Item> iterator()         
     {
-        return new DequeIterator();
+        return new DequeIterator(head);
     }
     
     // DequeIterator class
-    private class DequeIterator implements Iterator<Item>
+    private class DequeIterator<Item> implements Iterator<Item>
     {
     	private int idx = head;
+    	
+    	public DequeIterator(int head)
+    	{    		
+    	}
+    	
         public boolean hasNext() { return idx != tail; }
         public void remove()
         {
@@ -130,7 +135,7 @@ public class Deque<Item> implements Iterable<Item>
             	throw new java.util.NoSuchElementException();
             
             // Get from head
-            Item result = deque[idx++];
+            Item result = (Item) deque[idx++];
         	return result;
         }
     }
